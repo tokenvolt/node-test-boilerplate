@@ -1,0 +1,9 @@
+{
+  "presets": ["es2015"],
+  "plugins": [
+    ["module-alias", [
+      { "src": "./src/config", "expose": "config" },
+      { "src": "./src/utils", "expose": "utils" }
+    ]]
+  ]
+}
