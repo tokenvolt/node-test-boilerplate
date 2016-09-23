@@ -1,33 +1,43 @@
 import "babel-core/register"
 import "babel-polyfill"
+
 import koa from 'koa'
-import route from 'koa-route'
+import koaRouter from 'koa-router'
+import bodyParser from 'koa-bodyparser'
+import logger from 'koa-logger'
+import error from 'koa-error'
+import views from 'koa-views'
+
 import db from 'config/db'
 import co from 'co'
+
 import * as env from 'config/env'
 import { transaction } from 'utils/db'
 
+import index from './routes/index'
+import users from './routes/users'
+import projects from './routes/projects'
+import hey from './routes/hey'
+
 const app = koa()
+const router = koaRouter()
 
-app.use(route.get('/hey', function*() {
-  const name = 'Alex'
-  const title = 'Blah'
-  const is_project_manager = false
+app
+  .use(bodyParser())
+  .use(logger())
+  .use(views(__dirname + '/views/pages', { extension: 'jade' }))
+  .use(error({
+    engine: 'jade',
+    template: __dirname + '/views/pages/error.jade'
+  }))
 
-  const resp = yield transaction(function* (tx) {
-    const users     = yield tx.returning('*').insert({ name: name }).into('users')
-    const projects  = yield tx.returning('*').insert({ title: title }).into('projects')
-    const assignees = yield tx.returning('*').insert({ project_id: projects[0].id, user_id: users[0].id, is_project_manager })
-                              .into('assignees')
 
-    return assignees
-  })
+// Routes
+router.use('/', index.routes(), index.allowedMethods())
+router.use('/users', users.routes(), users.allowedMethods())
+router.use('/projects', projects.routes(), projects.allowedMethods())
+router.use('/hey', hey.routes(), hey.allowedMethods())
 
-  if (resp.success) {
-    this.body = 'OK'
-  } else {
-    this.body = 'Error'
-  }
-}))
+app.use(router.routes(), router.allowedMethods())
 
 app.listen(env.PORT)
