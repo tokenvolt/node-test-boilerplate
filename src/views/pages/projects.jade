@@ -1,0 +1,37 @@
+include ../partials/AddProject
+
+if projects
+  h3 Projects
+    ul
+      each project in projects
+        li
+          div
+            b Id: 
+            i #{project.id}
+
+          div
+            b Project: 
+            i #{project.title}
+
+          div
+            b Is project manager: 
+
+            if projects.is_project_manager
+              i projects.is_project_manager
+            else
+              i No
+
+          if project.users
+            div
+              h4 Colabrators:
+
+              ul
+                each user in project.users
+                  li
+                    div
+                      b Name: 
+                      i #{user.name}
+
+          br
+else
+  h3 Projects list is empty
