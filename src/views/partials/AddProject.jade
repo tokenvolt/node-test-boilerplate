@@ -1,0 +1,16 @@
+div
+  h2 Add project
+
+  form(action="/projects/create", method="post")
+    div
+      input(type="text", name="username", placeholder="Contributor name", required)
+
+    div
+      input(type="text", name="project", placeholder="Project", required)
+
+    div
+      label Is project manager?
+      input(type="checkbox", name="projectManager", placeholder="Project manager")
+
+    div
+      button Add
