@@ -1,5 +1,6 @@
 import "babel-core/register"
 import "babel-polyfill"
+
 import * as env from 'config/env'
 
 import Koa from 'koa'
@@ -14,10 +15,12 @@ import views from 'koa-views'
 import { apolloKoa, graphiqlKoa } from 'apollo-server'
 
 import GrpahQLShema from './graphql'
+
 import index from './routes/index'
 import users from './routes/users'
 import projects from './routes/projects'
 import hey from './routes/hey'
+
 
 const app = new Koa()
 const router = new KoaRouter()
@@ -32,6 +35,7 @@ app
     template: __dirname + '/views/pages/error.jade'
   })))
 
+
 // Routes
 router.use('/', index.routes(), index.allowedMethods())
 router.use('/users', users.routes(), users.allowedMethods())
@@ -44,6 +48,5 @@ router.get('/graphiql', graphiqlKoa({ endpointURL: '/graphql' }))
 
 app.use(router.routes())
    .use(router.allowedMethods())
-
 
 app.listen(env.PORT)
