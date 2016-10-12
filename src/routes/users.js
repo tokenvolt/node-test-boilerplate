@@ -1,24 +1,11 @@
 import koaRouter from 'koa-router'
-import db from 'config/db'
-import { transaction } from 'utils/db'
+import * as usersCtrl from '../controllers/usersCtrl'
 
 
 const router = koaRouter()
 
-router.get('/', function*() {
-  const users = yield db.select().from('users')
+router.get('/', usersCtrl.getUsers)
 
-  this.state = { users }
-
-  yield this.render('index')
-})
-
-router.post('/login', function*() {
-  const users = yield db.select('name').from('users')
-
-  this.state = { users }
-
-  yield this.render('index')
-})
+router.post('/login', usersCtrl.login)
 
 export default router

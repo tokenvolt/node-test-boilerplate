@@ -1,16 +1,10 @@
-import koaRouter from 'koa-router'
-import Project from '../models/project'
+import KoaRouter from 'koa-router'
+import indexCtrl from '../controllers/indexCtrl'
+import co from 'co'
 
 
-const router = koaRouter()
+const router = KoaRouter()
 
-router.get('/', function*() {
-  this.state = {
-    title: 'Homepage',
-    desc: 'This is awesome node boilerplate!'
-  }
-
-  yield this.render('index')
-})
+router.get('/', co.wrap(indexCtrl))
 
 export default router
